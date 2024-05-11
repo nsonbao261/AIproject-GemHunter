@@ -1,4 +1,5 @@
-1	B	G	1
-G	3	G	B
-B	2	B	G
-1	G	1	1
+2	B	G	B	2
+2	B	G	3	B
+G	2	2	B	2
+B	3	G	3	2
+B	3	B	B	G

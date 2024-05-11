@@ -1,49 +1,24 @@
 import sys
-from pysat.formula import *
 import time
-from pysat.solvers import Solver, Minisat22, Glucose3
 from algo import *
+from brute import *
+from satsolver import *
 
-def generateCnf(matrix):
-    solver = Solver(name='mc', use_timer=True)
-    for cell in np.argwhere(matrix == "_"):
-        solver.add_clause([cellVarible(cell[0], cell[1], matrix), -cellVarible(cell[0], cell[1], matrix)])
-    for num in np.argwhere(matrix != "_"):
-        var = []
-        x, y = int(num[0]), int(num[1])
-        adjacentEmptyCells = [item for item in adjacentCells(x, y, matrix) if matrix[int(item[0])][int(item[1])] == "_"]
-        for adj in adjacentEmptyCells:
-            var.append(cellVarible(adj[0], adj[1], matrix))
-        bomb_count = int(matrix[x][y])
-        emptyCellCounts = len(var)
-        for clauses in getCombination(var, emptyCellCounts - bomb_count + 1):
-            solver.add_clause(clauses)
-        for clauses in getNegativeCombination(var, bomb_count +1):
-            solver.add_clause(clauses)
-    return solver
-
-
-
-
-def main(input_file):
+def main(input_file, method):
     try:
         start_time = time.time()
         arr = createMatrix(input_file)
-        pos_arr = np.argwhere(arr != "_")
-        solver = generateCnf(arr)
-        if(solver.solve()):
-            solved_arr = arr
-            for i in range(len(arr)):
-                for j in range(len(arr[0])):
-                    if arr[i][j] == "_":
-                        var = i*len(arr[0]) + j
-                        if(solver.get_model()[var] > 0):
-                            solved_arr[i][j] = "B"
-                        else:
-                            solved_arr[i][j] = "G"
+        if method == "brute":
+            solved_arr = bruteForce(arr)
+        else:
+            solved_arr = pysatSolver(arr)
+        if len(solved_arr) > 0:
+            print("Solution: ")
             print(solved_arr)
             array_string = '\n'.join(['\t'.join(map(str, row)) for row in solved_arr])
             with open("output.txt", "w") as file:
+                file.seek(0)
+                file.truncate()
                 file.write(array_string)
         else:
             print("False")
@@ -53,6 +28,9 @@ def main(input_file):
         print("Error")
 
 if __name__ == "__main__":
-    if(len(sys.argv) != 2):
+    if(len(sys.argv) != 3):
         print("Error!")
-    main(sys.argv[1])
+    elif(sys.argv[2] not in ["brute", "pysat"]):
+        print("Method not found! Current method: brute, pysat")
+    else:
+        main(sys.argv[1], sys.argv[2])
