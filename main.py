@@ -34,6 +34,6 @@ if __name__ == "__main__":
     if(len(sys.argv) != 3):
         print("Error!")
     elif(sys.argv[2] not in ["brute", "pysat", "backtrack"]):
-        print("Method not found! Current method: brute, pysat")
+        print("Method not found! Current method: brute, pysat, backtrack")
     else:
         main(sys.argv[1], sys.argv[2])

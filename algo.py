@@ -65,3 +65,13 @@ def createMatrix(input_file):
         lines = [line.rstrip("\n").split(", ") for line in inputFile]
         print(lines)
         return np.array(lines)
+
+
+def checkMatrixValid(matrix):
+    numberCells = [(row_index, col_index) for row_index, row in enumerate(matrix) for col_index, col in enumerate(matrix[0]) if (matrix[row_index][col_index] not in ["B", "G"])]
+    for cell in numberCells:
+        x, y = int(cell[0]), int(cell[1])
+        bomb_count = len(getAdjBomb(x, y, matrix))
+        if bomb_count != int(matrix[x][y]):
+            return False
+    return True

@@ -35,13 +35,11 @@ def checkGemCondition(x, y, matrix):
         empty_count = len(getAdjEmpty(pos_x, pos_y, matrix))
         number = int(matrix[pos_x][pos_y])
         if bomb_count + empty_count < number:
-            print("Number: ", pos_x," ",  pos_y)
             return False
     return True
 
 
-def backtrack(matrix):
-    matrix = preBombCheck(matrix)
+def backtrackRecursion(matrix):
     emptyCells = np.argwhere(matrix == "_")
     if(len(emptyCells) == 0):
         return matrix
@@ -49,13 +47,23 @@ def backtrack(matrix):
     matrix[x][y] = "B"
     #Check Condition
     if checkBombCondition(x,y, matrix):
-        if backtrack(matrix) is not None:
-            return backtrack(matrix) 
+        if backtrackRecursion(matrix) is not None:
+            return backtrackRecursion(matrix) 
     matrix[x][y] = "G"
     if checkGemCondition(x, y, matrix):
-        return backtrack(matrix)
+        return backtrackRecursion(matrix)
     else:
         return None
+
+def backtrack(matrix):
+    matrix = preBombCheck(matrix)
+    emptyCells = np.argwhere(matrix == "_")
+    if(len(emptyCells) == 0):
+        check = checkMatrixValid(matrix)
+        if check == False:
+            return None
+    return backtrackRecursion(matrix)
+
 
 
 
