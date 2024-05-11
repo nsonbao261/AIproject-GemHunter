@@ -40,6 +40,23 @@ def adjacentCells(x, y, matrix):
             adjacent_cells.append((i, j))
     return adjacent_cells
 
+def getAdjBomb(x, y, matrix):
+    adj = adjacentCells(x, y, matrix)
+    return [pos for pos in adj if matrix[int(pos[0])][int(pos[1])] == "B"]
+
+
+
+def getAdjEmpty(x, y, matrix):
+    adj = adjacentCells(x, y, matrix)
+    return [pos for pos in adj if matrix[int(pos[0])][int(pos[1])] == "_"]
+
+
+
+def getAdjNumeric(x, y, matrix):
+    adj = adjacentCells(x,y,matrix)
+    return [pos for pos in adj if matrix[int(pos[0])][int(pos[1])].isdigit()]
+
+
 def cellVarible(x, y, matrix):
     return int(x)*len(matrix[0]) + int(y) + 1
 

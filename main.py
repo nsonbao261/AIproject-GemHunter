@@ -1,18 +1,21 @@
 import sys
 import time
 from algo import *
-from brute import *
+from backtrack import *
 from satsolver import *
+from brute import *
 
 def main(input_file, method):
     try:
         start_time = time.time()
         arr = createMatrix(input_file)
-        if method == "brute":
-            solved_arr = bruteForce(arr)
-        else:
+        if method == "backtrack":
+            solved_arr = backtrack(arr)
+        elif method == "pysat":
             solved_arr = pysatSolver(arr)
-        if len(solved_arr) > 0:
+        else:
+            solved_arr = bruteForce(arr)
+        if solved_arr is not None:
             print("Solution: ")
             print(solved_arr)
             array_string = '\n'.join(['\t'.join(map(str, row)) for row in solved_arr])
@@ -30,7 +33,7 @@ def main(input_file, method):
 if __name__ == "__main__":
     if(len(sys.argv) != 3):
         print("Error!")
-    elif(sys.argv[2] not in ["brute", "pysat"]):
+    elif(sys.argv[2] not in ["brute", "pysat", "backtrack"]):
         print("Method not found! Current method: brute, pysat")
     else:
         main(sys.argv[1], sys.argv[2])
